@@ -16,14 +16,17 @@ PKGNAME=rpi-elixir
 # Remove our package if it was already installed
 sudo apt remove -qq $PKGNAME || true
 
-# Clone Erlang if this is the first time
-cd $HOME
+# Clone Elixir if this is the first time
+BASEDIR=$PWD
 if [ ! -d elixir ]; then
     git clone https://github.com/elixir-lang/elixir.git
+    cd $BASEDIR/elixir
+else
+    cd $BASEDIR/elixir
+    git fetch
 fi
 
 # Clean up previous builds and sync to the tag.
-cd elixir
 git reset --hard
 git clean -fdx
 git checkout v$ELIXIR_VERSION
@@ -43,5 +46,7 @@ fpm -s dir -t deb -v $ELIXIR_VERSION -n $PKGNAME \
     --depends "rpi-erlang (>= 19.0.0)" \
     --deb-priority optional --category contrib -a all \
     -C $INSTALL_DIR
+
+mv -f *.deb $BASEDIR
 
 echo Success!!!

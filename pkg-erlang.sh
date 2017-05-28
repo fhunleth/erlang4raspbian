@@ -6,12 +6,11 @@
 #  1. Make sure that the current user has passwordless sudo access
 #  2. Run `nohup ./pkg-erlang.sh &` so that you can log off
 
-
 set -e
 
 export LANG=C
 
-OTP_VERSION=19.3.1
+OTP_VERSION=19.3.3
 
 # Debian package fields
 MAINTAINER="Frank Hunleth <fhunleth@troodon-software.com>"
@@ -19,6 +18,8 @@ DESCRIPTION="Concurrent, real-time, distributed functional language"
 LICENSE="Apache-2.0"
 HOMEPAGE="http://www.erlang.org/"
 PKGNAME=rpi-erlang
+
+BASEDIR=$PWD
 
 # Remove our package if it was already installed
 sudo apt remove -qq $PKGNAME || true
@@ -43,13 +44,15 @@ sudo apt install -qq ruby-dev htop autoconf libncurses5-dev libssl-dev libwxgtk3
 sudo gem install fpm
 
 # Clone Erlang if this is the first time
-cd $HOME
 if [ ! -d otp ]; then
     git clone https://github.com/erlang/otp.git
+    cd $BASEDIR/otp
+else
+    cd $BASEDIR/otp
+    git fetch 
 fi
 
 # Clean up previous builds and sync to the tag.
-cd otp
 git reset --hard
 git clean -fdx
 git checkout OTP-$OTP_VERSION
@@ -64,6 +67,18 @@ export ERL_TOP=$PWD
 ./configure --prefix=/usr
 make release RELEASE_ROOT=$RELEASE_DIR
 make install DESTDIR=$INSTALL_DIR
+
+# Trim install by removing hardly used modules
+# Saves
+# Removes:
+#   CORBA modules
+#   Diameter support
+#   MEGACO
+ERL_LIBDIR=$INSTALL_DIR/usr/lib/erlang/lib
+rm -fr $INSTALL_DIR/cos* \
+     $INSTALL_DIR/diameter* \
+     $INSTALL_DIR/megaco* \
+     $INSTALL_DIR/orber*
 
 # Package
 # NOTE: fpm has a bug that you prevents you from specifying all of the "provides" in one
@@ -128,5 +143,7 @@ fpm -s dir -t deb -v $OTP_VERSION -n $PKGNAME \
     --provides "erlang-xmerl" \
     --deb-priority optional --category interpreters -a armhf \
     -C $INSTALL_DIR
+
+mv -f *.deb $BASEDIR
 
 echo Success!!!
