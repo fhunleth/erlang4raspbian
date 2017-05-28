@@ -1,0 +1,8 @@
+Origin: apt.troodon-software.com
+Label: apt repository
+Codename: jessie
+Architectures: armhf source
+Components: main
+Description: Apt repository for Raspberry Pi Erlang
+SignWith: yes
+Pull: jessie
