@@ -21,7 +21,20 @@ sudo apt-get install rpi-elixir
 
 # Notes
 
-This link was extremely helpful:
+After the packages get built, run:
+
+```
+dpkg-sig --sign builder rpi-erlang_19.3.3_armhf.deb
+dpkg-sig --sign builder rpi-elixir_1.4.4_all.deb
+
+cd repo
+reprepro --ask-passphrase -Vb . includedeb jessie rpi-erlang_19.3.3_armhf.deb
+reprepro --ask-passphrase -Vb . includedeb jessie rpi-elixir_1.4.4_all.deb
+cd ..
+./publish.sh
+```
+
+This link is extremely helpful:
 
 https://scotbofh.wordpress.com/2011/04/26/creating-your-own-signed-apt-repository-and-debian-packages/
 
