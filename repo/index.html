@@ -1,11 +1,11 @@
-This repository will contain scripts for building up-to-date Erlang and Elixir
-packages for Raspbian.
+<html>
+    <head>
+    <title>Erlang4RaspberryPi</title>
+    </head>
+    <body>
+       <p>Install up-to-date Erlang and Elixir versions on your Raspberry Pi</p>
 
-# Using these packages
-
-On your Raspberry Pi, run the following:
-
-```
+       <pre>
 # Tell apt to validate and trust packages signed using this key
 wget -O - http://apt.troodon-software.com/fhunleth-apt-gpg.key | sudo apt-key add -
 
@@ -17,11 +17,7 @@ sudo apt-get update
 
 # Install Elixir!
 sudo apt-get install rpi-elixir
-```
+       </pre>
 
-# Notes
-
-This link was extremely helpful:
-
-https://scotbofh.wordpress.com/2011/04/26/creating-your-own-signed-apt-repository-and-debian-packages/
-
+    </body>
+</html>
