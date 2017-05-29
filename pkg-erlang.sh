@@ -65,7 +65,7 @@ INSTALL_DIR=$PWD/o/staging
 export ERL_TOP=$PWD
 ./otp_build autoconf
 ./configure --prefix=/usr
-make release RELEASE_ROOT=$RELEASE_DIR
+make -j2 release RELEASE_ROOT=$RELEASE_DIR
 make install DESTDIR=$INSTALL_DIR
 
 # Trim install by removing hardly used modules
@@ -75,10 +75,10 @@ make install DESTDIR=$INSTALL_DIR
 #   Diameter support
 #   MEGACO
 ERL_LIBDIR=$INSTALL_DIR/usr/lib/erlang/lib
-rm -fr $INSTALL_DIR/cos* \
-     $INSTALL_DIR/diameter* \
-     $INSTALL_DIR/megaco* \
-     $INSTALL_DIR/orber*
+rm -fr $ERL_LIBDIR/cos* \
+     $ERL_LIBDIR/diameter* \
+     $ERL_LIBDIR/megaco* \
+     $ERL_LIBDIR/orber*
 
 # Package
 # NOTE: fpm has a bug that you prevents you from specifying all of the "provides" in one

@@ -10,6 +10,6 @@ set -e
 ./pkg-erlang.sh
 
 # Building Elixir requires Erlang to be installed, so install it now.
-sudo dpkg -i $HOME/otp/*.deb
+sudo dpkg -i ./otp/*.deb
 ./pkg-elixir.sh
 
